@@ -10,15 +10,18 @@ router = APIRouter(
 
 engine = get_engine()
 
+
 @router.post("/", response_model=Aluno)
 async def create_aluno(aluno: Aluno) -> Aluno:
     await engine.save(aluno)
     return aluno
 
+
 @router.get("/", response_model=list[Aluno])
 async def get_all_alunos() -> list[Aluno]:
     alunos = await engine.find(Aluno)
     return alunos
+
 
 @router.get("/{aluno_id}", response_model=Aluno)
 async def get_aluno(aluno_id: str) -> Aluno:
@@ -26,6 +29,7 @@ async def get_aluno(aluno_id: str) -> Aluno:
     if not aluno:
         raise HTTPException(status_code=404, detail="Aluno not found")
     return aluno
+
 
 @router.put("/{aluno_id}", response_model=Aluno)
 async def update_aluno(aluno_id: str, aluno_data: Aluno) -> Aluno:
@@ -39,6 +43,7 @@ async def update_aluno(aluno_id: str, aluno_data: Aluno) -> Aluno:
     aluno.altura = aluno_data.altura
     await engine.save(aluno)
     return aluno
+
 
 @router.delete("/{aluno_id}")
 async def delete_aluno(aluno_id: str) -> dict:

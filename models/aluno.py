@@ -1,6 +1,7 @@
 from odmantic import Model
 from typing import Optional
 
+
 class Aluno(Model):
     nome: Optional[str]
     email: Optional[str]

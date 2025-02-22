@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from odmantic import ObjectId
 from database import get_engine
-from models.exercicio import Exercicio 
+from models.exercicio import Exercicio
 
 router = APIRouter(
     prefix="/exercicios",
@@ -10,15 +10,18 @@ router = APIRouter(
 
 engine = get_engine()
 
+
 @router.post("/", response_model=Exercicio)
 async def create_exercicio(exercicio: Exercicio) -> Exercicio:
     await engine.save(exercicio)
     return exercicio
 
+
 @router.get("/", response_model=list[Exercicio])
 async def get_all_exercicios() -> list[Exercicio]:
     exercicios = await engine.find(Exercicio)
     return exercicios
+
 
 @router.get("/{exercicio_id}", response_model=Exercicio)
 async def get_exercicio(exercicio_id: str) -> Exercicio:
@@ -26,6 +29,7 @@ async def get_exercicio(exercicio_id: str) -> Exercicio:
     if not exercicio:
         raise HTTPException(status_code=404, detail="Exercicio not found")
     return exercicio
+
 
 @router.put("/{exercicio_id}", response_model=Exercicio)
 async def update_exercicio(exercicio_id: str, exercicio_data: Exercicio) -> Exercicio:
@@ -40,6 +44,7 @@ async def update_exercicio(exercicio_id: str, exercicio_data: Exercicio) -> Exer
     exercicio.descricao = exercicio_data.descricao
     await engine.save(exercicio)
     return exercicio
+
 
 @router.delete("/{exercicio_id}")
 async def delete_exercicio(exercicio_id: str) -> dict:
