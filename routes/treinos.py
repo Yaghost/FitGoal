@@ -1,12 +1,14 @@
-from fastapi import APIRouter, HTTPException
-from odmantic import ObjectId
+from fastapi import APIRouter, HTTPException, Depends
+from odmantic import ObjectId, AIOEngine
 from database import get_engine
+from typing import List
 from models.treino import Treino, TreinoInput
 from models.treino_exercicio_embedded import (
     ExercicioTreinoEmbedded,
     ExercicioTreinoInput,
 )
 from models.exercicio import Exercicio
+from services.treinos import count_treinos_por_aluno, listar_treinos_por_dia
 from models.aluno import Aluno
 
 router = APIRouter(
@@ -15,6 +17,12 @@ router = APIRouter(
 )
 
 engine = get_engine()
+
+
+@router.get("/", response_model=list[Treino])
+async def get_all_treinos() -> list[Treino]:
+    treinos = await engine.find(Treino)
+    return treinos
 
 
 @router.post("/{aluno_id}", response_model=Treino)
@@ -55,20 +63,6 @@ async def add_exercicio_to_treino(
 
     treino.exercicios.append(novo_exercicio)
     await engine.save(treino)
-    return treino
-
-
-@router.get("/", response_model=list[Treino])
-async def get_all_treinos() -> list[Treino]:
-    treinos = await engine.find(Treino)
-    return treinos
-
-
-@router.get("/{treino_id}", response_model=Treino)
-async def get_treino(treino_id: str) -> Treino:
-    treino = await engine.find_one(Treino, Treino.id == ObjectId(treino_id))
-    if not treino:
-        raise HTTPException(status_code=404, detail="Treino not found")
     return treino
 
 
@@ -114,4 +108,22 @@ async def remove_exercicio_from_treino(treino_id: str, exercicio_id: str) -> Tre
 
     treino.exercicios = exercicios_atualizados
     await engine.save(treino)
+    return treino
+
+
+@router.get("/treinos/{dia_da_semana}", response_model=List[Treino])
+async def get_treinos_por_dia(dia_da_semana: str, engine: AIOEngine = Depends(get_engine)):
+    return await listar_treinos_por_dia(engine, dia_da_semana)
+
+
+@router.get("/{aluno_id}/contagem")
+async def contar_treinos(aluno_id: str, engine: AIOEngine = Depends(get_engine)):
+    return await count_treinos_por_aluno(engine, aluno_id)
+
+
+@router.get("/{treino_id}", response_model=Treino)
+async def get_treino(treino_id: str) -> Treino:
+    treino = await engine.find_one(Treino, Treino.id == ObjectId(treino_id))
+    if not treino:
+        raise HTTPException(status_code=404, detail="Treino not found")
     return treino
