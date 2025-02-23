@@ -45,6 +45,15 @@ classDiagram
         descricao: str
     }
 
+    class TreinoExercicioEmbedded {
+        exercicio_id: str
+        nome: str
+        series: int
+        repeticoes: int
+    }
+
     Aluno "1" -- "*" Treino
     Treino "*" -- "*" Exercicio
+    Treino "*" -- "*" TreinoExercicioEmbedded
+    TreinoExercicioEmbedded "*" -- "1" Exercicio
 ```
