@@ -45,10 +45,6 @@ async def search_alunos_by_nome(engine: AIOEngine, nome_parcial: str) -> List[Al
     )
 
 
-from odmantic import AIOEngine
-from models.aluno import Aluno
-
-
 async def get_imc_by_id(engine: AIOEngine, aluno_id) -> dict:
     """
     Busca um aluno pelo id e calcula seu IMC (Índice de Massa Corporal).
