@@ -2,9 +2,10 @@ from fastapi import APIRouter, HTTPException
 from odmantic import ObjectId
 from database import get_engine
 from models.exercicio import Exercicio
-from models.treino import Treino
-from models.treino_exercicio_embedded import ExercicioTreinoEmbedded
-from services.exercicios import count_exercicios_by_grupo, get_treinos_with_exercicios_by_aluno
+from services.exercicios import (
+    count_exercicios_by_grupo,
+    get_treinos_with_exercicios_by_aluno,
+)
 
 router = APIRouter(
     prefix="/exercicios",
@@ -68,5 +69,7 @@ async def get_exercicio(exercicio_id: str) -> Exercicio:
 async def get_treinos_with_exercicios_by_aluno_route(aluno_id: str):
     treinos_exercicios = await get_treinos_with_exercicios_by_aluno(engine, aluno_id)
     if not treinos_exercicios:
-        raise HTTPException(status_code=404, detail="Nenhum treino encontrado para este aluno")
+        raise HTTPException(
+            status_code=404, detail="Nenhum treino encontrado para este aluno"
+        )
     return treinos_exercicios

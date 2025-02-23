@@ -24,17 +24,14 @@ async def count_treinos_por_aluno(engine: AIOEngine, aluno_id: str):
     if not aluno:
         return {"error": "Aluno não encontrado"}
 
-    pipeline = [
-        {"$match": {"aluno": aluno_obj_id}},  
-        {"$count": "total_treinos"}  
-    ]
+    pipeline = [{"$match": {"aluno": aluno_obj_id}}, {"$count": "total_treinos"}]
 
     result = await engine.database["treino"].aggregate(pipeline).to_list(length=None)
 
     return {
         "aluno_id": aluno_id,
-        "nome": aluno.nome, 
-        "total_treinos": result[0]["total_treinos"] if result else 0
+        "nome": aluno.nome,
+        "total_treinos": result[0]["total_treinos"] if result else 0,
     }
 
 

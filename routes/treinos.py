@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from odmantic import ObjectId, AIOEngine
 from database import get_engine
-from typing import List
 from models.treino import Treino, TreinoInput
 from models.treino_exercicio_embedded import (
     ExercicioTreinoEmbedded,
@@ -111,8 +110,10 @@ async def remove_exercicio_from_treino(treino_id: str, exercicio_id: str) -> Tre
     return treino
 
 
-@router.get("/treinos/{dia_da_semana}", response_model=List[Treino])
-async def get_treinos_por_dia(dia_da_semana: str, engine: AIOEngine = Depends(get_engine)):
+@router.get("/treinos/{dia_da_semana}", response_model=list[Treino])
+async def get_treinos_por_dia(
+    dia_da_semana: str, engine: AIOEngine = Depends(get_engine)
+):
     return await listar_treinos_por_dia(engine, dia_da_semana)
 
 

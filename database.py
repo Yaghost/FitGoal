@@ -3,8 +3,6 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from odmantic import AIOEngine
 import os
 
-load_dotenv()
-
 # Carregar variáveis do arquivo .env
 load_dotenv()
 
