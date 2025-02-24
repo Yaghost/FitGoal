@@ -22,7 +22,7 @@ Terceiro módulo do trabalho final da disciplina de Desenvolvimento de Software 
 classDiagram
     direction LR
     class Aluno {
-        id: int
+        id: str
         nome: str
         email: str
         telefone: str
@@ -30,13 +30,13 @@ classDiagram
         altura: float
     }
     class Treino {
-        id: int
+        id: str
         nome: str
         dia_semana: str
         aluno_id: int
     }
     class Exercicio {
-        id: int
+        id: str
         nome: str
         grupo_muscular: str
         dificuldade: str
